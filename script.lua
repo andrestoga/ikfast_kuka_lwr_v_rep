@@ -44,7 +44,11 @@ JointHandle={-1,-1,-1,-1,-1,-1,-1}
 
     file = io.open(path,"r")
 
-    simSetObjectPosition( Target,-1,{file:read("*number"),file:read("*number"),file:read("*number")} )
+    target_x = file:read("*number")
+    target_y = file:read("*number")
+    target_z = file:read("*number")
+
+    simSetObjectPosition(Target,-1,{target_x, target_y, target_z})
 
     M = simGetObjectMatrix(Target, Base)
 
@@ -69,21 +73,33 @@ JointHandle={-1,-1,-1,-1,-1,-1,-1}
 
     simExtIWRIKFast(path)
     
-    file=io.open(path,"r")
+    file = io.open(path,"r")
 
-    for i=1,7 do
+    for i = 1, num_of_joints do
 
-        local number = file:read("*number")
+        joints[i] = file:read("*number")
 
-        if number == -100 then
+        if joints[i] == -100 then
             break
         end
 
         if i==4 then
-            simSetJointTargetPosition(JointHandle[i], -number)
+            simSetJointTargetPosition(JointHandle[i], -joints[i])
         else
-            simSetJointTargetPosition(JointHandle[i], number)
+            simSetJointTargetPosition(JointHandle[i], joints[i])
         end
     end
 
-    file:close()
+    -- file:close()
+
+    -- file = io.open(path,"w")
+
+    -- for j = 1, num_of_joints do
+    --     if j == 4 then
+    --         file:write(-joints[j]," ")
+    --     else
+    --         file:write(joints[j]," ")
+    --     end
+    -- end
+
+    -- file:close()
